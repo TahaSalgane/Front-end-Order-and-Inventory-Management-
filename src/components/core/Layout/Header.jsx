@@ -1,9 +1,12 @@
 import React from 'react';
 import { Nav, Navbar, Dropdown, DropdownButton } from 'react-bootstrap/';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { logout } from 'redux/apiCalls/authApiCall';
 const Navbars = () => {
+    const dispatch = useDispatch();
     const {user} = useSelector(state=>state.auth);
+    console.log(user)
     return (
         <Navbar bg='dark' expand="lg" variant="dark" className="px-3">
             <Navbar.Brand as={NavLink} to="/" className='headerbar-200 me-1'>
@@ -16,10 +19,11 @@ const Navbars = () => {
                 {user ? (
                     <DropdownButton variant="dark" id="dropdown-item-button" title={user.username}>
                         <Dropdown.Item as="button">profile</Dropdown.Item> <Dropdown.Divider />
-                        <Dropdown.Item as="button" onClick={() => console.log("object")}>
+                        <Dropdown.Item as="button" onClick={() => dispatch(logout())}>
                             Logout
                         </Dropdown.Item>
                     </DropdownButton>
+                    
                 ) : (
                     <>
                         <Nav.Link href="#action1" className="text-white" as={NavLink} to="/login">

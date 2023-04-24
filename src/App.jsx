@@ -1,16 +1,21 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Layout from './components/core/Layout/Index';
 import Login from 'pages/Login';
- 
+import ProtectedRoutes from 'hoc/ProtectedRoutes';
+import { useSelector } from 'react-redux';
 function App() {
+  const {user} = useSelector(state=>state.auth);
   return (
    <>
     <Routes>
-      <Route element={<Layout />}>
-       <Route path="/" element={<Home />}></Route>
-      </Route>
-      <Route path="login" element={<Login />} />
+    <Route element={<ProtectedRoutes/>} >
+        <Route element={<Layout />}>
+               <Route path="/home" element={<Home />}> </Route>
+       </Route>
+     </Route>
+
+      <Route path="/" element={!user ? <Login /> : <Navigate to ="/home" />} />
     </Routes>
    </>
   );

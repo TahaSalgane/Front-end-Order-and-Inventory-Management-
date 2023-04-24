@@ -4,7 +4,6 @@ import { Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { loginSchema } from 'utils/JoiValidation';
-import getUser from 'utils/helper';
 import { useDispatch } from 'react-redux';
 import { loginUser } from 'redux/apiCalls/authApiCall';
 const Login = () => {
@@ -13,11 +12,11 @@ const Login = () => {
     const submitForm = async (values) => {
         try {
             const {email,password} = values;            
-            dispatch(loginUser({email,password}));
+            await dispatch(loginUser({email,password}));
+            navigation("/home") 
         } catch (excep) {
             console.log(excep);
         }
-        // console.log(values, process.env.REACT_APP_API_URL);
     };
 
     return (

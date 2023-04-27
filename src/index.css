@@ -11,3 +11,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* .ps-sidebar-root{
+  position: relative;
+  width: auto !important
+} */
+.containerss {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: stretch;
+	align-content: stretch;
+}
+/* .ps-sidebar-container {
+  width: 87% !important ;
+} */
+.sidebarsss {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.arrow-sidebar{
+
+  margin-top:70vh;
+  text-align: center;
+}

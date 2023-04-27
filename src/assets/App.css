@@ -1,0 +1,55 @@
+ xc.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+/* .rps-collapsed .rps-sidebar-content {
+  display: none;
+} */
+
+/* .rps-collapsed .minimize-button {
+  width: 50px;
+} */
+
+/* Main content */
+/* .m-main {
+  flex: 1;
+  padding: 20px;
+  transition: margin-left 0.2s ease;
+  width: 100px;
+} */
+
+/* When sidebar is collapsed, shift main content to the right */
+/* .rps-collapsed main {
+  margin-left: 50px;
+} */
+/* .my-sidebar {
+      height: 100vh;
+      position: sticky;
+      top: 40px;
+  } */
+/* .my-content {
+ margin: 2px 0px 0px 2px;
+ box-shadow: 1px 1px 2px black inset;
+width: 100%;
+ } */
+/* .d-flex {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+  
+.my-content {
+    grid-column: 2 / -1;
+} */
+
+/* Set the container to fill the page */

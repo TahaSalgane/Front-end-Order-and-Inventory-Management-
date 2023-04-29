@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { Col, Button, Row, Card, Form } from 'react-bootstrap';
 import { Formik } from 'formik';
@@ -9,8 +9,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from 'redux/apiCalls/authApiCall';
 const Login = () => {
     // Set the intial value of the recaptcha state from the localStorate (tries)
-    const [recaptcha,setRecaptcha] = useState(localStorage.getItem('tries'))
-
+    const [recaptcha,setRecaptcha] = useState(parseInt(localStorage.getItem('tries')))
     const navigation = useNavigate();
     const dispatch = useDispatch();
     const submitForm = async (values) => {
@@ -22,11 +21,14 @@ const Login = () => {
             console.log(excep);
         }
     };
-    function onChangeRecaptcha(value) {
-        localStorage.removeItem('tries')
-        setTimeout(() => {
+    // console.log(recaptcha)
+    async function  onChangeRecaptcha(value) {
+        let initialNum = parseInt(0,10)
+        localStorage.setItem('tries',initialNum)
+        await setTimeout(() => {
             setRecaptcha(null)
-          }, 1.5 * 1000);
+            window.location.reload(true)
+          }, 1.2 * 1000);
       }
 
     return (
@@ -85,7 +87,7 @@ const Login = () => {
                                                 </Form.Text>
                                             </Form.Group>
                                             {
-                                                recaptcha>=3 ? (
+                                                parseInt(recaptcha)>=3 ? (
                                                     <div className='d-flex justify-content-center'>
                                                         <ReCAPTCHA
                                                         sitekey="6LeA9MklAAAAAMc__aId3hOZ1u8EAbAPLUqQjyG4"
@@ -94,10 +96,11 @@ const Login = () => {
                                                     </div>
                                                     ) 
                                                 
-                                                : <div className="d-grid">
-                                                    <Button type="submit">Login</Button>
-                                                </div>
-                                            }        
+                                                : null
+                                            }  
+                                                <div className="d-grid">
+                                                    <Button type="submit" disabled={recaptcha>=3?true:false}>Login</Button>
+                                                </div>      
                                             
                                             {
                                                 localStorage.getItem('errMessage') ? ( 

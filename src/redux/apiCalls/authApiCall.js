@@ -10,7 +10,21 @@ export const loginUser  = (user)=>{
             dispatch(authActions.login(data));
             localStorage.setItem("userInfo",JSON.stringify(data));
         } catch (error) {
-            console.log(error)
+            //Set the error inside the localStorage (errMessage)
+            localStorage.setItem('errMessage', error.response.data.error);
+            // Set a timeout to remove the value after a specific amount of time
+            setTimeout(() => {
+              localStorage.removeItem('errMessage');
+            }, 1 * 1000);
+            // localStorage.removeItem('tries')
+            if(localStorage.getItem('tries')){
+                const count = localStorage.getItem('tries')
+                let myNumber = parseInt(count, 10);
+                myNumber++;
+                localStorage.setItem('tries',myNumber)
+            }else {
+                localStorage.setItem('tries',1)
+            }
         }
     }
 }

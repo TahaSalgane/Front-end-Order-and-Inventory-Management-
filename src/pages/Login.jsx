@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
 import { Col, Button, Row, Card, Form } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +8,9 @@ import { loginSchema } from 'utils/JoiValidation';
 import { useDispatch } from 'react-redux';
 import { loginUser } from 'redux/apiCalls/authApiCall';
 const Login = () => {
+    // Set the intial value of the recaptcha state from the localStorate (tries)
+    const [recaptcha,setRecaptcha] = useState(localStorage.getItem('tries'))
+
     const navigation = useNavigate();
     const dispatch = useDispatch();
     const submitForm = async (values) => {
@@ -18,6 +22,12 @@ const Login = () => {
             console.log(excep);
         }
     };
+    function onChangeRecaptcha(value) {
+        localStorage.removeItem('tries')
+        setTimeout(() => {
+            setRecaptcha(null)
+          }, 1.5 * 1000);
+      }
 
     return (
         <Formik
@@ -74,10 +84,28 @@ const Login = () => {
                                                     ) : null}
                                                 </Form.Text>
                                             </Form.Group>
-
-                                            <div className="d-grid">
-                                                <Button type="submit">Login</Button>
-                                            </div>
+                                            {
+                                                recaptcha>=3 ? (
+                                                    <div className='d-flex justify-content-center'>
+                                                        <ReCAPTCHA
+                                                        sitekey="6LeA9MklAAAAAMc__aId3hOZ1u8EAbAPLUqQjyG4"
+                                                        onChange={onChangeRecaptcha}
+                                                        />
+                                                    </div>
+                                                    ) 
+                                                
+                                                : <div className="d-grid">
+                                                    <Button type="submit">Login</Button>
+                                                </div>
+                                            }        
+                                            
+                                            {
+                                                localStorage.getItem('errMessage') ? ( 
+                                                    <div className="text-center p-2">
+                                                        <div className="text-danger">{localStorage.getItem('errMessage')}</div>
+                                                    </div>
+                                                 ) : null
+                                            }
                                             <div className="mt-3">
                                                 <p className="mb-0 text-center">
                                                     Forgot

@@ -13,7 +13,7 @@ function App() {
     <Route element={<ProtectedRoutes/>} >
         <Route element={<Layout />}>
                <Route path="/home" element={<Home />}> </Route>
-               <Route path="/dasboard" element={<Dashboard />}> </Route>
+               <Route path="/dashboard" element={<Dashboard />}> </Route>
        </Route>
      </Route>
 

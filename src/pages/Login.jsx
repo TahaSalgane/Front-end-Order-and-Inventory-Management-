@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { Col, Button, Row, Card, Form } from 'react-bootstrap';
 import { Formik } from 'formik';
@@ -7,8 +7,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginSchema } from 'utils/JoiValidation';
 import { useDispatch } from 'react-redux';
 import { loginUser } from 'redux/apiCalls/authApiCall';
+
 const Login = () => {
     // Set the intial value of the recaptcha state from the localStorate (tries)
+    
     const [recaptcha,setRecaptcha] = useState(parseInt(localStorage.getItem('tries')))
     const navigation = useNavigate();
     const dispatch = useDispatch();
@@ -18,16 +20,16 @@ const Login = () => {
             await dispatch(loginUser({email,password}));
             navigation("/home") 
         } catch (excep) {
-            console.log(excep);
+            window.location.reload(true)
         }
     };
     // console.log(recaptcha)
     async function  onChangeRecaptcha(value) {
-        let initialNum = parseInt(0,10)
-        localStorage.setItem('tries',initialNum)
+        // let initialNum = parseInt(0,10)
+        const num = parseInt(localStorage.getItem('tries'))
+        localStorage.setItem('tries',num+1)
         await setTimeout(() => {
             setRecaptcha(null)
-            window.location.reload(true)
           }, 1.2 * 1000);
       }
 
@@ -87,7 +89,7 @@ const Login = () => {
                                                 </Form.Text>
                                             </Form.Group>
                                             {
-                                                parseInt(recaptcha)>=3 ? (
+                                                parseInt(localStorage.getItem('tries'))>=3 && (
                                                     <div className='d-flex justify-content-center'>
                                                         <ReCAPTCHA
                                                         sitekey="6LeA9MklAAAAAMc__aId3hOZ1u8EAbAPLUqQjyG4"
@@ -96,7 +98,7 @@ const Login = () => {
                                                     </div>
                                                     ) 
                                                 
-                                                : null
+                                                
                                             }  
                                                 <div className="d-grid">
                                                     <Button type="submit" disabled={recaptcha>=3?true:false}>Login</Button>

@@ -17,13 +17,11 @@ export const loginUser  = (user)=>{
               localStorage.removeItem('errMessage');
             }, 1 * 1000);
             // localStorage.removeItem('tries')
-            if(localStorage.getItem('tries')){
+            if(localStorage.getItem('tries') || localStorage.setItem('tries',1)){
                 const count = localStorage.getItem('tries')
                 let myNumber = parseInt(count, 10);
                 myNumber++;
                 localStorage.setItem('tries',myNumber)
-            }else {
-                localStorage.setItem('tries',1)
             }
         }
     }

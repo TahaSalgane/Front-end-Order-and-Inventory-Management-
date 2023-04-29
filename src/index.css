@@ -36,3 +36,23 @@ code {
   margin-top:70vh;
   text-align: center;
 }
+
+/* .active {
+  background-color: blue;
+  color: white;
+}
+
+.ps-menuitem-root:hover {
+  background-color: red !important;
+  /* opacity: 0; */
+  /* color: white !important; */
+/* } */
+.active:active{
+  background: #000;
+}
+.active{
+  background: #000;
+}
+.active::after{
+  background: #000;
+}

@@ -7,6 +7,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const Sidebars = () => {
   const location = useLocation();
+  console.log(location.pathname);
+
   const [active, setActive] = useState(null);
 
   const { collapseSidebar } = useProSidebar();
@@ -15,15 +17,23 @@ const Sidebars = () => {
     <div>
       <Sidebar className  ="sidebarsss" width='200px'>
         <Menu iconShape="circle">
-          <MenuItem
-          component={<Link onClick={() => setActive("active")} className={`${active} ?  ${active}:""`} to="/dashboard" />}
-            icon={<AiFillDashboard />}
-            className={location.pathname === "/dashboard" ? "active" : ""}
-            // activeStyle={{ backgroundColor: "red", opacity: 1, color: "white" }}
-          >
-            {/* <Link to="/dashboard"> Dashboard</Link> */}
-            Dashboard
-          </MenuItem>
+<MenuItem
+  component={
+    <Link
+      onClick={() => setActive("active")}
+      className={`${active} ?  ${active}:""`}
+      to="/dashboard"
+    />
+  }
+  icon={<AiFillDashboard />}
+  className={location.pathname === "/dashboard" ? "active" : ""}
+  style={{
+    backgroundImage:
+      location.pathname === "/dashboard" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",
+  }}
+>
+  Dashboard
+</MenuItem>
           <MenuItem icon={<SiGoogleclassroom />}>Classes</MenuItem>
           <SubMenu icon={<BiEdit />} label="Equipment">
             <MenuItem icon={<BiTable />}>Table</MenuItem>

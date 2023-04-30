@@ -47,12 +47,30 @@ code {
   /* opacity: 0; */
   /* color: white !important; */
 /* } */
-.active:active{
-  background: #000;
-}
+
 .active{
-  background: #000;
+  color: rgb(255, 255, 255);
 }
-.active::after{
-  background: #000;
+.active:hover {
+  background-image: linear-gradient(to right, #00000083 0%, #5c5e703f 51%, #cac3c356 100%) !important;
+  color: rgb(24, 24, 24);
+
 }
+.sidebarsss {
+  /* Your other styles */
+}
+
+.sidebarsss .pro-sidebar .pro-menu .pro-menu-item > a {
+  color: #000 !important; /* Change the color of the link text */
+}
+
+.sidebarsss .pro-sidebar .pro-menu .pro-menu-item.active > a {
+  background-color: #1100ff !important;
+  color: #b700ff !important; /* Change the color of the link text */
+}
+
+.sidebarsss .pro-sidebar .pro-menu .pro-menu-item > a:hover {
+  background-color: #0026ff !important;
+  color: #1100fc !important; /* Change the color of the link text */
+}
+

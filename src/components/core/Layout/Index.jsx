@@ -33,7 +33,7 @@ const Index= () => {
             <div style={{ position: 'sticky', top: '0', zIndex: '999' }}>
                 <Header/>
             </div>
-            {user?.isAdmin ? (
+            {user?.role ? (
                <div className="containerss">
                  <div className="my-sidebars">
                    <Sidebar/>

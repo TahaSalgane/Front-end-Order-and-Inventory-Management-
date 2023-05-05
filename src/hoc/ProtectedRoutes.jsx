@@ -13,7 +13,7 @@ const ProtectedRoutes = () => {
     }
   }, [navigation, user]);
 
-  return user?.isAdmin ? <Outlet /> : <Login />;
+  return user?.role ? <Outlet /> : <Login />;
 };
 
 export default ProtectedRoutes;

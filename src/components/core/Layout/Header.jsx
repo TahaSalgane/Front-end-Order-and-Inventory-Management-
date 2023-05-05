@@ -10,7 +10,7 @@ const Navbars = () => {
     return (
         <Navbar bg='dark' expand="lg" variant="dark" className="px-3">
             <Navbar.Brand as={NavLink} to="/" className='headerbar-200 me-1'>
-                Gestion
+            {user.role}
             </Navbar.Brand>
 
             <Navbar.Toggle aria-controls="navbarScroll" />

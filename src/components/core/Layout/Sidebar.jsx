@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, useProSidebar, SubMenu } from 'react-pro-sidebar';
 import { useSelector } from 'react-redux';
-import {AiFillDashboard,BiChevronsRight, BiChevronsLeft,BiEdit,SiGoogleclassroom,HiUserGroup,FaSchool} from "components/core/Layout/icons";
+import {AiFillDashboard,BiChevronsRight, BiChevronsLeft,BiEdit,SiGoogleclassroom,HiUserGroup,FaSchool,HiUser} from "components/core/Layout/icons";
 
 const Sidebars = () => {
   const location = useLocation();
@@ -65,6 +65,13 @@ const Sidebars = () => {
               className={location.pathname === "/utilisateurs" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/utilisateurs" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
               >Utilisateurs
+            </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/profile"/>}
+              icon={<HiUser />}
+              className={location.pathname === "/profile" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/profile" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Profile
             </MenuItem>
           </React.Fragment>
            )}

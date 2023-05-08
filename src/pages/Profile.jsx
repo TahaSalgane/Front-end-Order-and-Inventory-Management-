@@ -64,7 +64,7 @@ const Profile = ()=>{
         
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" name="password" required placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                        <Form.Control type="password" name="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
                     </Form.Group>
         
                     <Button variant="primary" type="submit">Update Profile</Button>

@@ -10,23 +10,53 @@ const Sidebars = () => {
 
   const { collapseSidebar } = useProSidebar();
   const {user} = useSelector(state=>state.auth);
+  const collapsed = useProSidebar().collapsed;
+
+  let profileContent;
+  if (!user.profile_image.path) {
+    if (collapsed) {
+      profileContent = (
+        <div style={{ width: "60%", margin: "auto" }}>
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Avatar username={user.username} />
+          </div>
+        </div>
+      );
+    } else {
+      profileContent = (
+        <div style={{ width: "60%", margin: "auto" }}>
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Avatar size={110} username={user.username} />
+            <p style={{ textAlign: "center", fontSize: "25px" }}>{user.username}</p>
+          </div>
+        </div>
+      );
+    }
+  } else {
+    if (collapsed) {
+      profileContent = (
+        <div style={{ width: "60%", margin: "auto" }}>
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <img height={60} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image.path}`} alt="Profile" />
+          </div>
+        </div>
+      );
+    } else {
+      profileContent = (
+        <div style={{ width: "60%", margin: "auto" }}>
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <img height={150} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image.path}`} alt="Profile" />
+            <p style={{ textAlign: "center", fontSize: "25px" }}>{user.username}</p>
+          </div>
+        </div>
+      );
+    }
+  }
   return (
     <div>
       <Sidebar className  ="sidebarsss" width='200px'>
-      {useProSidebar().collapsed ? (
-    <div style={{ width: "60%", margin: "auto" }}>
-      <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-        <Avatar username={user.username} />
-      </div>
-    </div>
-  ) : (
-    <div style={{ width: "60%", margin: "auto" }}>
-      <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-        <Avatar size={110} username={user.username} />
-        <p style={{ textAlign:"center", fontSize:"25px" }}>{user.username}</p>
-      </div>
-    </div>
-  )}
+      {profileContent}
+
         <Menu iconShape="circle">
         {user.role === "magasinier" && (
           <React.Fragment>

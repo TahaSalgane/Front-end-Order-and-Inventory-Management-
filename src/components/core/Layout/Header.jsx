@@ -8,7 +8,6 @@ import Avatar from 'components/shared/AvatarUser';
 const Navbars = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-
   return (
     <Navbar bg="dark" expand="lg" variant="dark" className="px-3 navbarrr">
       <Navbar.Brand as={NavLink} to="/" className="headerbar-200 me-1">
@@ -21,7 +20,7 @@ const Navbars = () => {
         {user ? (
           <div className="d-flex align-items-center">
             {user.profile_image ? (
-              <img src={user.profile_image} alt="Profile" className="avatar-img" />
+              <img height={45} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image.path}`} alt="Profile" />
             ) : (
               <Avatar username={user.username} />
             )}

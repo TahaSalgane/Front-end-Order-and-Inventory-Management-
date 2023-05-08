@@ -18,7 +18,7 @@ const Login = () => {
         try {
             const {email,password} = values;            
             await dispatch(loginUser({email,password}));
-            navigation("/home") 
+            navigation("/dashboard") 
         } catch (excep) {
             window.location.reload(true)
         }

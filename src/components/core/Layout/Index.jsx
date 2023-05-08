@@ -34,16 +34,24 @@ const Index= () => {
                 <Header/>
             </div>
             {user?.role ? (
-               <div className="containerss">
-                 <div className="my-sidebars">
-                   <Sidebar/>
-                 </div>
-                 <div className="my-contents">
-                   <Container fluid className="unContainer">
-                     <Outlet />
-                   </Container>
-                 </div>
-               </div>
+              //  <div className="containerss">
+              //    <div className="-sidmyebars">
+              //      <Sidebar/>
+              //    </div>
+              //    <div className="-contmyents">
+              //      <Container fluid className="unContainer">
+              //        <Outlet />
+              //      </Container>
+              //    </div>
+              //  </div>
+              <section className='admin-dashboard'>
+                <div className='admin-sidebar'>
+                  <Sidebar/>
+                </div>
+                <div className='admin-main'>
+                <Outlet />
+                </div>
+              </section>
             ) : (
                 <Container fluid className="unContainer">
                     <Outlet />

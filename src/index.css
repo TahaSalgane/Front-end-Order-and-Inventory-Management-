@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -17,11 +18,6 @@ code {
 } */
 .containerss {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: flex-start;
-	align-items: stretch;
-	align-content: stretch;
 }
 /* .ps-sidebar-container {
   width: 87% !important ;
@@ -33,10 +29,17 @@ code {
 }
 .arrow-sidebar{
 
-  margin-top:70vh;
+  margin-top:25vh;
   text-align: center;
 }
+/* .avatar-wrapper {
+  display: flex;
+  align-items: center;
+}
 
+.avatar-wrapper .username {
+  margin-left: 8px;
+} */
 /* .active {
   background-color: blue;
   color: white;
@@ -56,21 +59,59 @@ code {
   color: rgb(24, 24, 24);
 
 }
-.sidebarsss {
-  /* Your other styles */
+
+.card-icon{
+color: rgba(0, 0, 0, 0.3) !important;
+}
+.card-category{
+  color: rgb(243, 231, 231);
+
+}
+.admin-dashboard {
+  display: flex;
 }
 
-.sidebarsss .pro-sidebar .pro-menu .pro-menu-item > a {
-  color: #000 !important; /* Change the color of the link text */
+.admin-sidebar {
+  position: sticky;
+  top: 10px;
+  flex: 1;
+  height: 100vh;
 }
 
-.sidebarsss .pro-sidebar .pro-menu .pro-menu-item.active > a {
-  background-color: #1100ff !important;
-  color: #b700ff !important; /* Change the color of the link text */
+.admin-main {
+  flex: 11;
+  padding: 10px;
 }
 
-.sidebarsss .pro-sidebar .pro-menu .pro-menu-item > a:hover {
-  background-color: #0026ff !important;
-  color: #1100fc !important; /* Change the color of the link text */
+@media only screen and (max-width: 450px) {
+  .admin-dashboard {
+    display: block;
+  }
+
+  .admin-sidebar {
+    position: static;
+  }
 }
 
+/* CustomPagination.css */
+.react-bootstrap-table-pagination .page-item {
+  color: #ffffff; /* White text color */
+}
+
+.react-bootstrap-table-pagination .page-item.active .page-link {
+  background-color: rgb(153, 0, 255) ; /* Dark background color for active page */
+  border-color: rgb(153, 0, 255) ; /* White border color for active page */
+}
+
+.react-bootstrap-table-pagination .page-link {
+  color: rgb(153, 0, 255) ; /* White text color for page links */
+}
+
+.react-bootstrap-table-pagination .page-link:hover {
+  color: rgb(255, 255, 255) ; /* White text color on hover */
+  background-color: rgb(153, 0, 255) ; /* Dark background color on hover */
+  border-color: rgb(153, 0, 255) ; /* White border color on hover */
+}
+#pageDropDown{
+  background-color: rgb(153, 0, 255) !important;
+}

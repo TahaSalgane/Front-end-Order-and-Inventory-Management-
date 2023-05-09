@@ -20,7 +20,7 @@ const Navbars = () => {
         {user ? (
           <div className="d-flex align-items-center">
             {user.profile_image ? (
-              <img height={45} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image.path}`} alt="Profile" />
+              <img height={45} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image}`} alt="Profile" />
             ) : (
               <Avatar username={user.username} />
             )}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import request from "utils/request";
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch  } from 'react-redux';
+import { authActions } from "redux/slices/authSlice";
 
 const Profile = ()=>{
     const [name, setName] = useState('');
@@ -12,7 +13,8 @@ const Profile = ()=>{
 
     const {user} = useSelector(state=>state.auth);
 
-  
+    const dispatch = useDispatch();
+
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
@@ -24,8 +26,13 @@ const Profile = ()=>{
         // console.log(uploadedImage)
         const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
         const {data} = await request.post('/updateProfile',dataRequest ,{headers :{'Authorization' : `Bearer ${token}`}});
-        console.log(data.image_url) ;
-        localStorage.setItem('profile_image',data.image_url) ;
+        console.log(data.profile_image) ;
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        userInfo.profile_image = data.profile_image;
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+        dispatch(authActions.login(userInfo));
+
       } catch (error) {
         console.log(error.response.data.error)
       }
@@ -48,7 +55,7 @@ const Profile = ()=>{
                 <Row className="justify-content-center">
                 <Col md={4} className="text-center">
                     <div className="mb-4">
-                    <img src={image || `http://127.0.0.1:8000${user.profile_image.path}`} height="140px" alt="Profile Image" className="rounded shadow w-75 mb-3" />
+                    <img src={image || `http://127.0.0.1:8000${user.profile_image}`} height="140px" alt="Profile Image" className="rounded shadow w-75 mb-3" />
                     <Form.Group controlId="formBasicImage">
                         <Form.Control type="file" name='image' onChange={handleImageChange} className="form-control-file text-center" />
                     </Form.Group>

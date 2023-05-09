@@ -13,7 +13,7 @@ const Sidebars = () => {
   const collapsed = useProSidebar().collapsed;
 
   let profileContent;
-  if (!user.profile_image.path) {
+  if (!user.profile_image) {
     if (collapsed) {
       profileContent = (
         <div style={{ width: "60%", margin: "auto" }}>
@@ -37,7 +37,7 @@ const Sidebars = () => {
       profileContent = (
         <div style={{ width: "60%", margin: "auto" }}>
           <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-            <img style={{ maxHeight: "40px", maxWidth: "40px" }} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image.path}`} alt="Profile" />
+            <img style={{ maxHeight: "40px", maxWidth: "40px" }} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image}`} alt="Profile" />
           </div>
         </div>
       );
@@ -45,7 +45,7 @@ const Sidebars = () => {
       profileContent = (
       <div style={{ width: "60%", margin: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
-          <img style={{ maxHeight: "150px", maxWidth: "150px" }} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image.path}`} alt="Profile" />
+          <img style={{ maxHeight: "150px", maxWidth: "150px" }} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image}`} alt="Profile" />
           <p style={{ fontSize: "25px" }}>{user.username}</p>
         </div>
       </div>

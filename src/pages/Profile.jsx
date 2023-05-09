@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import request from "utils/request";
+import { useSelector } from 'react-redux';
 
 const Profile = ()=>{
     const [name, setName] = useState('');
@@ -8,6 +9,9 @@ const Profile = ()=>{
     const [password, setPassword] = useState('');
     const [uploadedImage, setUploadedImage] = useState('');
     const [image,setImage] = useState() ;
+
+    const {user} = useSelector(state=>state.auth);
+
   
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -44,7 +48,7 @@ const Profile = ()=>{
                 <Row className="justify-content-center">
                 <Col md={4} className="text-center">
                     <div className="mb-4">
-                    <img src={image || "profile-image.jpg"} height="140px" alt="Profile Image" className="rounded shadow w-75 mb-3" />
+                    <img src={image || `http://127.0.0.1:8000${user.profile_image.path}`} height="140px" alt="Profile Image" className="rounded shadow w-75 mb-3" />
                     <Form.Group controlId="formBasicImage">
                         <Form.Control type="file" name='image' onChange={handleImageChange} className="form-control-file text-center" />
                     </Form.Group>

@@ -6,6 +6,7 @@ import Login from 'pages/Login';
 import ProtectedRoutes from 'hoc/ProtectedRoutes';
 import { useSelector } from 'react-redux';
 import Articels from 'pages/Articles';
+import Users from 'pages/Users';
 function App() {
   const {user} = useSelector(state=>state.auth);
   return (
@@ -16,6 +17,8 @@ function App() {
                <Route path="/dashboard" element={<Dashboard />}> </Route>
                <Route path="/profile" element={<Profile />}> </Route>
                <Route path="/articles" element={<Articels />}> </Route>
+               <Route path="/utilisateurs" element={<Users />}> </Route>
+
        </Route>
      </Route>
 

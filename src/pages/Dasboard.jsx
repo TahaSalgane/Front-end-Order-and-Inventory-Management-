@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Container, Row, Col } from 'react-bootstrap';
+import React from 'react';
+import { Card, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import {FaArrowCircleRight,FaBullhorn,FaBoxOpen,BiEdit,HiUserGroup} from "components/core/Layout/icons";
 

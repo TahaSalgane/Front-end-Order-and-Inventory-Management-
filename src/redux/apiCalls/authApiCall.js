@@ -1,12 +1,12 @@
 import { authActions } from "redux/slices/authSlice"; 
-import request from "utils/request";
-import getUser from "utils/helper"; 
+import { userLogin } from "services/authService"; 
+// import getUser from "utils/helper"; 
 export const loginUser  = (user)=>{
     return async (dispatch) =>{
         try {
-            const {data} = await request.post('/login',user);
+            const {data} = await userLogin(user);
             console.log(data)
-            const userDecoded = getUser(data.token);
+            // const userDecoded = getUser(data.token);
             // console.log(userDecoded)
             dispatch(authActions.login(data));
             localStorage.setItem("userInfo",JSON.stringify(data));

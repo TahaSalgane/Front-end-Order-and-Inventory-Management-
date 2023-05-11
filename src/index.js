@@ -6,18 +6,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import store from './redux/store';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import { Provider } from 'react-redux';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-  <React.StrictMode>
     <Provider store={store}>
     <ProSidebarProvider>
   <App />
 </ProSidebarProvider>;    </Provider>
-  </React.StrictMode>
   </BrowserRouter>,
 
 );

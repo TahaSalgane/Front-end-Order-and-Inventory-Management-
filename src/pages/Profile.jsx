@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import request from "utils/request";
 import { useSelector,useDispatch  } from 'react-redux';
 import { authActions } from "redux/slices/authSlice";
-
+import { updateProfile } from 'services/usersService';
 const Profile = ()=>{
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -24,8 +23,8 @@ const Profile = ()=>{
         dataRequest.append("password",password) ;
         dataRequest.append("image",uploadedImage) ;
         // console.log(uploadedImage)
-        const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-        const {data} = await request.post('/updateProfile',dataRequest ,{headers :{'Authorization' : `Bearer ${token}`}});
+        // const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
+        const {data} = await updateProfile(dataRequest);
         console.log(data.profile_image) ;
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         userInfo.profile_image = data.profile_image;
@@ -55,7 +54,7 @@ const Profile = ()=>{
                 <Row className="justify-content-center">
                 <Col md={4} className="text-center">
                     <div className="mb-4">
-                    <img src={image || `http://127.0.0.1:8000${user.profile_image}`} height="140px" alt="Profile Image" className="rounded shadow w-75 mb-3" />
+                    <img src={image || `http://127.0.0.1:8000${user.profile_image}`} height="140px" alt="Profile" className="rounded shadow w-75 mb-3" />
                     <Form.Group controlId="formBasicImage">
                         <Form.Control type="file" name='image' onChange={handleImageChange} className="form-control-file text-center" />
                     </Form.Group>

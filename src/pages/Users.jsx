@@ -1,19 +1,22 @@
-import React, { useState,useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useState,useEffect,useRef  } from 'react';
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import { Button, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { createUser,deleteUser,updateUser,getAllUsers } from 'services/usersService';
+import { useSelector } from "react-redux";
+import  {userValidationSchema}  from 'utils/JoiValidation';
 const User = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [newArticleName, setNewArticleName] = useState("");
-  const [updateArticleName, setUpdateArticleName] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [updateData, setUpdateData] = useState(null); 
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const {user} = useSelector(state=>state.auth);
+
+  
 useEffect(()=>{
     const loadData = async ()=>{
         try {
@@ -29,97 +32,118 @@ useEffect(()=>{
   const handleShowAddModal = () => {
     setShowAddModal(true);
   };
-
-  const handleShowUpdateModal = () => {
-    setShowUpdateModal(true);
-  };
-
+  const formikRef = useRef(null);
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
   };
   const handleCloseModal = () => {
     setShowAddModal(false);
-    setShowUpdateModal(false);
-    setNewArticleName("");
-    setUpdateArticleName("");
     setSelectedUser(null);
+    setShowUpdateModal(false); 
+    setUpdateData(null);
   };
-
-  const handleNewArticleNameChange = (e) => {
-    setNewArticleName(e.target.value);
-  };
-
-  const handleUpdateArticleNameChange = (e) => {
-    setUpdateArticleName(e.target.value);
-  };
-
-  const handleUpdateArticle = () => {
-    if (selectedUser) {
-      const updatedusers = users.map((product) =>
-        product.Id === selectedUser.Id
-          ? { ...product, Name: updateArticleName }
-          : product
-      );
-
-      setUsers(updatedusers);
-      handleCloseModal();
-    }
-  };
-
-  const handleEditClick = (article) => {
-    setSelectedUser(article);
-    setUpdateArticleName(article.Name);
-    handleShowUpdateModal();
-  };
-
-  const handleDeleteClick = (article) => {
-    const updatedusers = users.filter(
-      (product) => product.Id !== article.Id
-    );
-
-    setUsers(updatedusers);
-  };
-  const openModal = () => {
+  const handleDeleteClick = (userD) => {
+    setSelectedUser(userD);
     setIsOpen(true);
   };
-
-  const closeModal = () => {
-    setIsOpen(false);
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteUser(selectedUser.id);
+      const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
+      setUsers(updatedUsers);
+      setIsOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
+  const handleUpdateClick = (user) => {
+    setSelectedUser(user);
+    setUpdateData(user);
+    setShowUpdateModal(true); 
+  };
+  const handleUpdateUser = async () => {
+    const values = formikRef.current.values;
+      try {
+        console.log(values)
+      const { data } = await updateUser(selectedUser.id, values);
+      const updatedUser = {
+      ...selectedUser,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      };
+      const updatedUsers = users.map((user) =>
+      user.id === selectedUser.id ? updatedUser : user
+    );
+    
+      setUsers(updatedUsers);
+      handleCloseModal();
+      console.log(data);
+      } catch (error) {
+      console.log(error);
+}
+};
+  const ConfirmDeleteModal = () => {
+    return (
+      <Modal show={modalIsOpen} onHide={() => setIsOpen(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation de suppression</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Êtes-vous sûr de vouloir supprimer "{selectedUser && selectedUser.name}" ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setIsOpen(false)}>
+            Annuler
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete}>
+            Supprimer
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+  
   const initialValues = {
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-    genre: '',
+    role: '',
   };
-  const handleSubmit = async(values) => {
-    const {data} = await createUser(values);
-    const newArticle = {
-      name: data.name,
-      email: data.email,
-      role: data.role,
-    };
-    console.log(data)
-    setUsers([...users, newArticle]);
-    handleCloseModal();
+
+  const handleAddUser = async() => {
+    const values = formikRef.current.values;
+    try {
+      
+      const { data } = await createUser(values);
+      const newArticle = {
+        id:data.id,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+      };
+      console.log(data);
+      setUsers([...users, newArticle]);
+      handleCloseModal();
+      handleCloseModal();
+    } catch (error) {
+      console.log(error)
+    }
   };
   const filteredUsers = users.filter((user) =>
   user.name.toLowerCase().includes(searchValue.toLowerCase())
-);
-  const validationSchema = Yup.object().shape({
-    username: Yup.string().required('Username is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    password: Yup.string().required('Password is required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
-    genre: Yup.string().required('Genre is required'),
-  });
+  );
+
 
   const columns = [
     {
+      dataField: "id",
+      text: "ID",
+      sort: true,
+    },
+    {
+      
       dataField: "name",
       text: "name",
       sort: true,
@@ -143,7 +167,7 @@ useEffect(()=>{
             variant="primary"
             size="sm"
             className="mr-2"
-            onClick={() => handleEditClick(row)}
+            onClick={() => handleUpdateClick(row)}
           >
             Modifier
           </Button>
@@ -168,20 +192,20 @@ useEffect(()=>{
         />
       </div>
       <BootstrapTable
-        keyField="Id"
+        keyField="id"
         data={filteredUsers}
         columns={columns}
         pagination={paginationFactory()}
       />
       <Modal show={showAddModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Ajouter un article</Modal.Title>
+          <Modal.Title>Ajouter un articles</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            validationSchema={userValidationSchema}
+            innerRef={formikRef}
           >
             <Form>
               <div className="row mb-3">
@@ -218,46 +242,162 @@ useEffect(()=>{
                 </div>
               </div>
               <div>
-                <label htmlFor="type">type:</label>
-                <Field as="select" id="type" name="type" className="form-control">
-                  <option value="">Select type</option>
-                  <option value="magasinier">Magasinier</option>
-                  <option value="directeur_etablissemnt">Directeur d'établissement</option>
-                  <option value="directeur_complexe">Directeur de complexe</option>
+                <label htmlFor="role">role:</label>
+                <Field as="select" id="role" name="role" className="form-control">
+                <option value="">Select role</option>
+                  {user.role === 'directeur complexe' && (
+                    <>
+                      <option value="magasinier">Magasinier</option>
+                      <option value="directeur etablissement">Directeur d'établissement</option>
+                      <option value="directeur complexe">Directeur de complexe</option>
+                    </>
+                  )}
+                  {user.role === 'directeur etablissement' && (
+                    <>
+                      <option value="directeur etablissement">Directeur d'établissement</option>
+                    </>
+                  )}
+                  {user.role === 'magasinier' && (
+                    <>
+                      <option value="magasinier">Magasinier</option>
+                    </>
+                  )}
                 </Field>
-                <ErrorMessage name="type" component="div" className="error-message" />
-              </div> <br />
-              <Button className='mx-1' variant="secondary" onClick={handleCloseModal}>
-                  Annuler
-                 </Button>
-             <Button type='submit' variant="primary">
-               Ajouter
-            </Button>            </Form>
+                <ErrorMessage name="role" component="div" className="error-message" />
+              </div> <br />            
+            </Form>
           </Formik>
         </Modal.Body>
+        <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal}>
+            Annuler
+          </Button>
+          <Button variant="primary" onClick={() => {
+            formikRef.current.handleSubmit();
+            handleAddUser();
+            }}>
+          Ajouter
+        </Button>
+        </Modal.Footer>
+
       </Modal>
       <Modal show={showUpdateModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Modifier l'article</Modal.Title>
+        <Modal.Title>Update User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Nom de l'article"
-            value={updateArticleName}
-            onChange={handleUpdateArticleNameChange}
-          />
+          <Formik
+            initialValues={{
+            username: updateData?.name || '',
+            email: updateData?.email || '',
+            password: '',
+            confirmPassword: '',
+            role: updateData?.role || '',
+            }}
+            validationSchema={userValidationSchema}
+            innerRef={formikRef}
+            >
+            <Form>
+              <div className="row mb-3">
+                <div className="col">
+                  <label htmlFor="username">Username:</label>
+                  <Field
+                    type="text"
+                    id="username"
+                    name="username"
+                    className="form-control"
+                  />
+                  <ErrorMessage
+                    name="username"
+                    component="div"
+                    className="error-message"
+                  />
+                </div>
+                <div className="col">
+                  <label htmlFor="email">Email:</label>
+                  <Field
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="form-control"
+                  />
+                  <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="error-message"
+                  />
+                </div>
+             </div>
+             <div className="row mb-3">
+                <div className="col">
+                  <label htmlFor="password">New Password:</label>
+                  <Field
+                    type="password"
+                    id="password"
+                    name="password"
+                    className="form-control"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="error-message"
+                  />
+                 </div>
+              <div className="col">
+                <label htmlFor="confirmPassword">Confirm Password:</label>
+                <Field
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className="form-control"
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
+              <div className="row mb-3">
+                <div className="col">
+                  <label htmlFor="role">role:</label>
+                  <Field as="select" id="role" name="role" className="form-control">
+                  <option value="">Select role</option>
+                  {user.role === 'directeur complexe' && (
+                    <>
+                      <option value="magasinier">Magasinier</option>
+                      <option value="directeur etablissement">Directeur d'établissement</option>
+                      <option value="directeur complexe">Directeur de complexe</option>
+                    </>
+                  )}
+                  {user.role === 'directeur etablissement' && (
+                    <>
+                      <option value="directeur etablissement">Directeur d'établissement</option>
+                    </>
+                  )}
+                  {user.role === 'magasinier' && (
+                    <>
+                      <option value="magasinier">Magasinier</option>
+                    </>
+                  )}
+                    </Field>
+                    <ErrorMessage name="role" component="div" className="error-message" />
+                </div>
+              </div>
+            </Form>
+          </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button variant="secondary" onClick={() => setIsOpen(false)}>
             Annuler
           </Button>
-          <Button variant="primary" onClick={handleUpdateArticle}>
-            Modifier
-          </Button>
+          <Button variant="primary" type="submit" onClick={handleUpdateUser}>
+            Update User
+            </Button>
         </Modal.Footer>
       </Modal>
+      <ConfirmDeleteModal />
+
     </div>
   );
 };

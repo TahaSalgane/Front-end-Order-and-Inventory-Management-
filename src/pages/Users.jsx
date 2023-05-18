@@ -134,8 +134,6 @@ useEffect(()=>{
   const filteredUsers = users.filter((user) =>
   user.name.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-
   const columns = [
     {
       dataField: "id",

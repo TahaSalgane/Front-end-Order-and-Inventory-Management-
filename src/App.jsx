@@ -7,6 +7,7 @@ import ProtectedRoutes from 'hoc/ProtectedRoutes';
 import { useSelector } from 'react-redux';
 import Articels from 'pages/Articles';
 import Users from 'pages/Users';
+import Orders from 'pages/Orders';
 function App() {
   const {user} = useSelector(state=>state.auth);
   return (
@@ -18,7 +19,7 @@ function App() {
                <Route path="/profile" element={<Profile />}> </Route>
                <Route path="/articles" element={<Articels />}> </Route>
                <Route path="/utilisateurs" element={<Users />}> </Route>
-
+               <Route path="/ordres" element={<Orders />}> </Route>
        </Route>
      </Route>
 

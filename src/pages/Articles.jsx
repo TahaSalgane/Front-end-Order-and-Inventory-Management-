@@ -1,25 +1,31 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-
-const productsGenerator = (quantity) => {
-  const items = [];
-  for (let i = 0; i < quantity; i++) {
-    items.push({ Id: i, Name: `Article name ${i}`, Total: 2100 + i });
-  }
-  return items;
-};
-
+import { createArticle,getAllArticles,updateArticle,deleteArticle } from "services/articlesService";
 const Articels = () => {
   const [searchValue, setSearchValue] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newArticleName, setNewArticleName] = useState("");
   const [updateArticleName, setUpdateArticleName] = useState("");
+  const [deleteArticleName, setDeleteArticleName] = useState("");
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const [products, setProducts] = useState(productsGenerator(100));
+  const [articles, setArticles] = useState([]);
+  useEffect(()=>{
+    const loadData = async ()=>{
+        try {
+            const {data} =await getAllArticles(); 
+            console.log(data.articles)
+            setArticles(data.articles)
+        } catch (error) {
+            console.log(error)
+        } 
+    };
+    loadData();
 
+},[])
   const handleShowAddModal = () => {
     setShowAddModal(true);
   };
@@ -27,18 +33,21 @@ const Articels = () => {
   const handleShowUpdateModal = () => {
     setShowUpdateModal(true);
   };
-
+  const handleShowDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.Name.toLowerCase().includes(searchValue.toLowerCase())
+  const filteredArticles = articles.filter((article) =>
+  article.designationArticle.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   const handleCloseModal = () => {
     setShowAddModal(false);
     setShowUpdateModal(false);
+    setShowDeleteModal(false);
     setNewArticleName("");
     setUpdateArticleName("");
     setSelectedArticle(null);
@@ -52,58 +61,80 @@ const Articels = () => {
     setUpdateArticleName(e.target.value);
   };
 
-  const handleAddArticle = () => {
-    const newArticle = {
-      Id: products.length,
-      Name: newArticleName,
-      Total: 2100 + products.length,
-    };
-
-    setProducts([...products, newArticle]);
-    handleCloseModal();
+  const handleAddArticle = async() => {
+    try {
+      const newArticle = {
+        id: articles.length,
+        designationArticle: newArticleName,
+      };
+      const { data } = await createArticle(newArticle);
+      setArticles([...articles, data.articles]);
+      handleCloseModal();
+      handleCloseModal();
+      handleCloseModal();
+    } catch (error) {
+      console.log(error)
+    }
+  
   };
 
-  const handleUpdateArticle = () => {
+  const handleUpdateArticle = async() => {
     if (selectedArticle) {
-      const updatedProducts = products.map((product) =>
-        product.Id === selectedArticle.Id
-          ? { ...product, Name: updateArticleName }
-          : product
-      );
-
-      setProducts(updatedProducts);
+      try {
+      const updatedArticles = articles.map((article) =>
+      article.id === selectedArticle.id
+        ? { ...article, designationArticle: updateArticleName }
+        : article
+    );
+      await updateArticle({"id":selectedArticle.id,"designationArticle":updateArticleName});
+      handleCloseModal();  
+      setArticles(updatedArticles);
       handleCloseModal();
     }
+    catch (error) {
+    console.log(error);
+    }
   };
-
+  }
   const handleEditClick = (article) => {
     setSelectedArticle(article);
-    setUpdateArticleName(article.Name);
+    setUpdateArticleName(article.designationArticle);
     handleShowUpdateModal();
   };
-
   const handleDeleteClick = (article) => {
-    const updatedProducts = products.filter(
-      (product) => product.Id !== article.Id
-    );
-
-    setProducts(updatedProducts);
+    setSelectedArticle(article);
+    setDeleteArticleName(article.name)
+    handleShowDeleteModal();
   };
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteArticle(selectedArticle.id);
+      const updatedArticles = articles.filter((article) => article.id !== selectedArticle.id);
+      setArticles(updatedArticles);
+      handleCloseModal();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  
+  // const handleDeleteClick = (article) => {
+  //   const updatedProducts = articles.filter(
+  //     (article) => articles.Id !== article.Id
+  //   );
+
+  //   setArticles(updatedProducts);
+  // };
 
   const columns = [
     {
-      dataField: "Id",
+      dataField: "id",
       text: "Article ID",
       sort: true,
     },
     {
-      dataField: "Name",
-      text: "Article Name",
-      sort: true,
-    },
-    {
-      dataField: "Total",
-      text: "Total Article",
+      dataField: "designationArticle",
+      text: "article",
       sort: true,
     },
     {
@@ -140,7 +171,7 @@ return (
       </div>
       <BootstrapTable
         keyField="Id"
-        data={filteredProducts}
+        data={filteredArticles}
         columns={columns}
         pagination={paginationFactory()}
       />
@@ -188,7 +219,22 @@ return (
           </Button>
         </Modal.Footer>
       </Modal>
-
+      <Modal show={showDeleteModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Supprimer l'article</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <p>Are you sure you wanna delete {deleteArticleName}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Annuler
+          </Button>
+          <Button variant="primary" onClick={handleConfirmDelete}>
+            Supprimer
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
   

@@ -148,6 +148,20 @@ const Sidebars = () => {
               >Articles
             </MenuItem>
             <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/ordres"/>}
+              icon={<FaBoxOpen />}
+              className={location.pathname === "/ordres" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/ordres" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Ordres
+            </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/réclamation"/>}
+              icon={<FaBullhorn />}
+              className={location.pathname === "/réclamation" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/réclamation" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Réclamation
+            </MenuItem>
+            <MenuItem
               component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
               icon={<SiGoogleclassroom />}
               className={location.pathname === "/classes" ? "active" : ""}

@@ -42,6 +42,7 @@ const Sidebars = () => {
         </div>
       );
     } else {
+
       profileContent = (
       <div style={{ width: "60%", margin: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
@@ -90,28 +91,28 @@ const Sidebars = () => {
             </MenuItem>
             <SubMenu icon={<FaSchool/>} label="Etablissements">
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/syba"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >ISTA
+              >SYBA
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/daoudiat"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >ENCG
+              >DAOUDIAT
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/babDokala"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >FST
+              >BABDOKKALA
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/jbelKhder"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >fssm
+              >JBELKHDER
             </MenuItem>
             </SubMenu>
             <MenuItem
@@ -180,28 +181,28 @@ const Sidebars = () => {
             </MenuItem>
             <SubMenu icon={<FaSchool/>} label="Etablissements">
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/syba"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >ISTA
+              >SYBA
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/daoudiat"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >ENCG
+              >DAOUDIAT
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/babDokala"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >FST
+              >BABDOKKALA
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes/jbelKhder"/>}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
-              >fssm
+              >JBELKHDER
             </MenuItem>
             </SubMenu>
             <MenuItem

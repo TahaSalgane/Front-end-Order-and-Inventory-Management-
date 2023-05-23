@@ -178,7 +178,7 @@ useEffect(()=>{
   return (
     <div className="mb-5">
         <Button variant="primary" onClick={handleShowAddModal}>
-  Ajouter un article
+  Ajouter un utilisateur
     </Button>
       <div className="my-3">
         <input
@@ -197,7 +197,7 @@ useEffect(()=>{
       />
       <Modal show={showAddModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Ajouter un articles</Modal.Title>
+          <Modal.Title>Ajouter un utilisateur</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik

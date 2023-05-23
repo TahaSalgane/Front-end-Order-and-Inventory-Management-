@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import Articels from 'pages/Articles';
 import Users from 'pages/Users';
 import Orders from 'pages/Orders';
+import Classes from 'pages/Classes';
+import ClasseArticles from 'pages/ClasseArticles';
 function App() {
   const {user} = useSelector(state=>state.auth);
   return (
@@ -20,6 +22,8 @@ function App() {
                <Route path="/articles" element={<Articels />}> </Route>
                <Route path="/utilisateurs" element={<Users />}> </Route>
                <Route path="/ordres" element={<Orders />}> </Route>
+               <Route path="/classes/:etablissement" element={<Classes />}> </Route>
+               <Route path="/classes/:etablissement/:classId" element={<ClasseArticles />}> </Route>
        </Route>
      </Route>
 

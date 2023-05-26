@@ -10,6 +10,7 @@ const Sidebars = () => {
 
   const { collapseSidebar } = useProSidebar();
   const {user} = useSelector(state=>state.auth);
+
   const collapsed = useProSidebar().collapsed;
 
   let profileContent;
@@ -162,7 +163,7 @@ const Sidebars = () => {
               >Réclamation
             </MenuItem>
             <MenuItem
-              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/classes"/>}
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to={`/classes/${user.etablissement}`}/>}
               icon={<SiGoogleclassroom />}
               className={location.pathname === "/classes" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/classes" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}

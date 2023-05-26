@@ -2,7 +2,7 @@ import React, { useState,useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import { useParams ,Link } from "react-router-dom";
+import { useParams ,Link ,useNavigate} from "react-router-dom";
 import { createClass,getAllClasses,updateClass,deleteClass } from "services/classesServices";
 const Classes = () => {
     const [searchValue, setSearchValue] = useState("");
@@ -15,15 +15,18 @@ const Classes = () => {
     const [updateType, setUpdateType] = useState("");
     const [selectedClass, setSelectedClass] = useState(null);
     const [classes, setClasses] = useState([]);
-  const {etablissement} = useParams() ;
-  console.log(etablissement)
+    const {etablissement} = useParams() ;
+    const navigate = useNavigate();
 
 useEffect(()=>{
   const loadData = async ()=>{
       try {
           const {data} =await getAllClasses(etablissement); 
-          console.log(data)
-          setClasses(data.classes)
+          if(data.back){
+            navigate(-1)
+          }else{
+            setClasses(data.classes)
+          }
       } catch (error) {
           console.log(error)
       } 

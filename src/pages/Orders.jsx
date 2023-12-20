@@ -3,27 +3,31 @@ import { Button, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import Select from "react-select";
-import { getAllOrders,createOrders } from "services/ordersService";
+import { getAllOrders, createOrders, updateOrder } from "services/ordersService";
 import { getAllArticles } from "services/articlesService";
 import { useSelector } from 'react-redux';
+import { getStatusColor } from "components/ui/statusColor";
+import { toast } from 'react-toastify';
+import BreadCrumbs from "components/ui/breadCrumbs";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedArticles, setSelectedArticles] = useState([]);
-  const {user} = useSelector(state=>state.auth);
+  const { user } = useSelector(state => state.auth);
+
   useEffect(() => {
     const loadData = async () => {
       try {
-        const { data } = await getAllOrders();
         const allArticles = await getAllArticles();
+        const { data } = await getAllOrders();
         setOrders(data.orders);
         setArticles(allArticles.data.articles);
-        console.log(data)
       } catch (error) {
-        console.log(error);
+        toast.error(error.message, { autoClose: 3000 });
       }
     };
     loadData();
@@ -40,7 +44,7 @@ const Orders = () => {
     setSelectedOrder(order);
   };
 
-  const handleConfirmClick = () => {
+  const handleConfirmClick = async () => {
     if (selectedOrder) {
       const updatedOrders = orders.map((order) => {
         if (order.id === selectedOrder.id) {
@@ -48,7 +52,14 @@ const Orders = () => {
         }
         return order;
       });
-      setOrders(updatedOrders);
+      try {
+        const { data } = await updateOrder(selectedOrder.id, { 'status': selectedStatus });
+        setOrders(data.orders);
+        toast.success("Le status de l'order a été modifié avec succès.", { autoClose: 3000 });
+
+      } catch (error) {
+        toast.error(error.message, { autoClose: 3000 });
+      }
       setSelectedOrder(null);
     }
   };
@@ -61,6 +72,7 @@ const Orders = () => {
       }
       return o;
     });
+    setSelectedStatus(value)
     setOrders(updatedOrders);
   };
 
@@ -75,28 +87,32 @@ const Orders = () => {
   const handleModalConfirm = async () => {
     const title = document.getElementById("orderTitle").value;
     const selectedArticleIds = selectedArticles.map((article) => article.value);
-    const selectedArticlesData = articles.filter((article) => selectedArticleIds.includes(article.id));
+    const selectedArticlesData = articles.filter((article) =>
+      selectedArticleIds.includes(article.id)
+    );
     if (!title) {
       console.log("Title is required");
-      return; // Exit the function if the title is null
+      return;
     }
-  
+
     if (selectedArticleIds.length === 0) {
       console.log("At least one article must be selected");
-      return; // Exit the function if no articles are selected
+      return;
     }
-  
     try {
-      await createOrders({ "titre": title, "articles": selectedArticleIds });
+      const { data } = await createOrders({
+        titre: title,
+        articles: selectedArticleIds, // Pass the array directly
+      });
+      console.log(data) ;
+      console.log(data);
+      setOrders(data.orders);
       setShowModal(false);
+      toast.success("L'order a été ajoutée avec succès.", { autoClose: 3000 });
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, { autoClose: 3000 });
     }
-  
-    console.log("Title:", title);
-    console.log("Selected Articles:", selectedArticleIds);
   };
-  
 
   const handleArticleChange = (selectedOptions) => {
     setSelectedArticles(selectedOptions);
@@ -107,6 +123,14 @@ const Orders = () => {
       dataField: "id",
       text: "Order ID",
       sort: true,
+      headerStyle: {
+        width: '10%',
+      },
+      style: {
+        maxWidth: '10%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
     },
     {
       dataField: "titre",
@@ -114,16 +138,30 @@ const Orders = () => {
       sort: true,
     },
     {
-      dataField: "articles",
+      dataField: "article_id",
       text: "Articles",
       sort: true,
+      headerStyle: {
+        width: '30%',
+      },
+      style: {
+        maxWidth: '30%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
       formatter: (cell, row) => (
         <>
           {row.articles.map((article) => (
-            <span key={article.id}>{article.designationArticle}</span>
+            <span key={article.id}>-{article.designationArticle}<br /></span>
           ))}
         </>
       ),
+    },
+    {
+      dataField: "etablissement",
+      text: "etablissement",
+      sort: true,
+      hidden: !(user.role === "magasinier" || user.role === "directeur complexe"),
     },
     {
       dataField: "status",
@@ -136,12 +174,12 @@ const Orders = () => {
               value={row.status}
               onChange={(e) => handleStatusSelectChange(e, row)}
             >
-              <option value="Pending">Pending</option>
-              <option value="Processing">Processing</option>
-              <option value="Delivered">Delivered</option>
+              <option value="sent">sent</option>
+              <option value="inProgress">inProgress</option>
+              <option value="delivered">delivered</option>
             </select>
           ) : (
-            cell
+            <span style={{ color: getStatusColor(cell) }}>{cell}</span>
           )}
         </>
       ),
@@ -149,6 +187,7 @@ const Orders = () => {
     {
       dataField: "actions",
       text: "Actions",
+      hidden: !(user.role === "magasinier" || user.role === "directeur complexe"),
       formatter: (cell, row) => (
         <>
           {row.isEditing ? (
@@ -160,35 +199,52 @@ const Orders = () => {
       ),
     },
   ];
-
   return (
-    <div className="mb-5">
-      <Button onClick={handleAddOrder}>Add Order</Button>
-
+    <div className="mb-5 container-modal">
+      <div className="mt-4 mx-3">
+      <BreadCrumbs
+          data={[
+              {
+                  text: 'Dashboard',
+                  path: '/dashboard',
+              },
+              {
+                  text: 'Orders',
+                  active: true,
+              },
+          ]}
+      />
+       </div>
+    {((user.role === "directeur etablissement") || (user.role === "directeur complexe")) && (
+      <Button className="my-4" onClick={handleAddOrder}>Ajouter un order</Button>
+    )}
       <BootstrapTable
         keyField="id"
         data={orders}
         columns={columns}
         pagination={paginationFactory()}
       />
-
-      <Modal show={showModal} onHide={handleModalClose}>
+      <Modal show={showModal} onHide={handleModalClose} dialogClassName="custom-dialog">
         <Modal.Header closeButton>
-          <Modal.Title>Add Order</Modal.Title>
+          <Modal.Title>Ajouter un order</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <input  id="orderTitle"  type="text" placeholder="Enter the title" />
-
-          {/* Select for articles */}
-          <Select
-            isMulti
-            options={articles.map((article) => ({
-              value: article.id,
-              label: article.designationArticle,
-            }))}
-            value={selectedArticles}
-            onChange={handleArticleChange}
-          />
+        <label htmlFor="username">Titre:</label>
+          <input id="orderTitle" className="mb-3 ms-4 w-75" type="text" placeholder="Entrez le titre" /> <br/>
+          <div className="articles-container">
+  <label htmlFor="username">Articles:</label>
+  <Select
+    isMulti
+    options={articles.map((article) => ({
+      value: article.id,
+      label: article.designationArticle,
+    }))}
+    placeholder="Sélectionnez les articles"
+    value={selectedArticles}
+    onChange={handleArticleChange}
+    className="w-75"
+  />
+</div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleModalClose}>
@@ -199,7 +255,7 @@ const Orders = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+      </div>
   );
 };
 

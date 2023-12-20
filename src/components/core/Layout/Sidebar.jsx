@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, useProSidebar, SubMenu } from 'react-pro-sidebar';
 import { useSelector } from 'react-redux';
-import {AiFillDashboard,FaBoxOpen,FaBullhorn,BiChevronsRight, BiChevronsLeft,BiEdit,SiGoogleclassroom,HiUserGroup,FaSchool,HiUser} from "components/core/Layout/icons";
+import {AiFillDashboard,FaBoxOpen,FaBullhorn,BiChevronsRight, BiChevronsLeft,BiEdit,SiGoogleclassroom,HiUserGroup,FaSchool,HiUser ,FaCog} from "components/core/Layout/icons";
 import Avatar from 'components/shared/AvatarUser';
 const Sidebars = () => {
   const location = useLocation();
@@ -48,7 +48,7 @@ const Sidebars = () => {
       <div style={{ width: "60%", margin: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
           <img style={{ maxHeight: "150px", maxWidth: "150px" }} className="rounded-circle" src={`http://127.0.0.1:8000${user.profile_image}`} alt="Profile" />
-          <p style={{ fontSize: "25px" }}>{user.username}</p>
+          <p style={{ fontSize: "25px" }}>{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</p>
         </div>
       </div>
       );
@@ -56,9 +56,16 @@ const Sidebars = () => {
   }
   return (
     <div>
+      
       <Sidebar className  ="sidebarsss" width='200px'>
       {profileContent}
-
+      <div className="button-container" onClick={() => collapseSidebar()}>
+          {useProSidebar().collapsed ? (
+            <h3><BiChevronsRight /></h3>
+          ) : (
+            <h1><BiChevronsLeft /></h1>
+          )}
+        </div>
         <Menu iconShape="circle">
         {user.role === "magasinier" && (
           <React.Fragment>
@@ -130,6 +137,13 @@ const Sidebars = () => {
               style={{backgroundImage:location.pathname === "/profile" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
               >Profile
             </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/parametre"/>}
+              icon={<FaCog />}
+              className={location.pathname === "/parametre" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/parametre" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Parametre
+            </MenuItem>
           </React.Fragment>
            )}
           {user.role === "directeur etablissement" && (
@@ -175,6 +189,20 @@ const Sidebars = () => {
               className={location.pathname === "/utilisateurs" ? "active" : ""}
               style={{backgroundImage:location.pathname === "/utilisateurs" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
               >Utilisateurs
+            </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/profile"/>}
+              icon={<HiUser />}
+              className={location.pathname === "/profile" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/profile" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Profile
+            </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/parametre"/>}
+              icon={<FaCog />}
+              className={location.pathname === "/parametre" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/parametre" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Parametre
             </MenuItem>
           </React.Fragment>
            )}
@@ -227,13 +255,25 @@ const Sidebars = () => {
               style={{backgroundImage:location.pathname === "/utilisateurs" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
               >Utilisateurs
             </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/profile"/>}
+              icon={<HiUser />}
+              className={location.pathname === "/profile" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/profile" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Profile
+            </MenuItem>
+            <MenuItem
+              component={<Link onClick={() => setActive("active")}className={`${active} ?  ${active}:""`}to="/parametre"/>}
+              icon={<FaCog />}
+              className={location.pathname === "/parametre" ? "active" : ""}
+              style={{backgroundImage:location.pathname === "/parametre" ? "linear-gradient(to right, #000000 0%, #5c5e70b2 51%, #cac3c356 100%)" : "",}}
+              >Parametre
+            </MenuItem>
           </React.Fragment>
 
            )}
         </Menu>
-        <div className='arrow-sidebar' onClick={() => collapseSidebar()} > {useProSidebar().collapsed ? (
-          <h1><BiChevronsRight /></h1>
-        ):  <h1> <BiChevronsLeft /></h1> } </div>
+
       </Sidebar>
     </div>
   );

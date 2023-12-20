@@ -19,3 +19,8 @@ export const userValidationSchema = Yup.object().shape({
     .required('Confirm Password is required'),
     role: Yup.string().required('role is required'),
 });
+export const reclamationValidationSchema = Yup.object().shape({
+  titre: Yup.string().required('titre is required'),
+  description: Yup.string().required('description is required'),
+  order_id: Yup.number().required('Order is required'),
+});

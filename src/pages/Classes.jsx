@@ -4,6 +4,10 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { useParams ,Link ,useNavigate} from "react-router-dom";
 import { createClass,getAllClasses,updateClass,deleteClass } from "services/classesServices";
+import { toast } from 'react-toastify';
+import BreadCrumbs from "components/ui/breadCrumbs";
+import { faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Classes = () => {
     const [searchValue, setSearchValue] = useState("");
     const [showAddModal, setShowAddModal] = useState(false);
@@ -28,7 +32,7 @@ useEffect(()=>{
             setClasses(data.classes)
           }
       } catch (error) {
-          console.log(error)
+        toast.error(error.message, { autoClose: 3000 });
       } 
   };
   loadData();
@@ -81,8 +85,10 @@ const handleAddClass = async () => {
     const { data } = await createClass(newClass);
     setClasses([...classes, data.classe]);
     handleCloseModal();
+    toast.success("La classe a été ajoutée avec succès.", { autoClose: 3000 });
+
   } catch (error) {
-    console.log(error);
+    toast.error(error.message, { autoClose: 3000 });
   }
 };
 
@@ -98,8 +104,9 @@ const handleUpdateClass = async () => {
       console.log(data.message)
       setClasses(updatedClasses);
       handleCloseModal();
+      toast.success("La classe a été modifiée avec succès.", { autoClose: 3000 });
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, { autoClose: 3000 });
     }
   }
 };
@@ -123,8 +130,10 @@ const handleConfirmDelete = async () => {
     const updatedClasses = classes.filter((classItem) => classItem.id !== selectedClass.id);
     setClasses(updatedClasses);
     handleCloseModal();
+    toast.success("La classe a été supprimée avec succès.", { autoClose: 3000 });
+
   } catch (error) {
-    console.log(error);
+    toast.error(error.message, { autoClose: 3000 });
   }
 };
 
@@ -133,6 +142,14 @@ const columns = [
     dataField: "id",
     text: "Class ID",
     sort: true,
+    headerStyle: {
+      width: '120px',
+    },
+    style: {
+      maxWidth: '120px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
   },
   {
     dataField: "nomSalle",
@@ -149,19 +166,44 @@ const columns = [
     text: "Actions",
     formatter: (cell, row) => (
       <>
-        <Button
-          variant="primary"
-          size="sm"
-          className="mr-2"
-          onClick={() => handleEditClick(row)}
-        >
-          Modifier
-        </Button>
-        <Button variant="danger" size="sm" onClick={() => handleDeleteClick(row)}>
-          Supprimer
-        </Button>
+          <FontAwesomeIcon
+              onClick={() => handleEditClick(row)}
+              style={{
+                  borderRadius: '15px',
+                  cursor: 'pointer',
+                  padding: '5px',
+                  color: 'white',
+                  background: 'rgb(23, 180, 23)',
+                  marginLeft: '5px',
+              }}
+              size="lg"
+              className="me-1"
+              icon={faPenToSquare}
+          />
+          <FontAwesomeIcon
+              onClick={() => handleDeleteClick(row)}
+              style={{
+                  borderRadius: '15px',
+                  cursor: 'pointer',
+                  padding: '5px',
+                  color: 'white',
+                  background: 'red',
+                  marginLeft: '7px',
+              }}
+              size="lg"
+              className="me-1"
+              icon={faTrash}
+          />
       </>
     ),
+    headerStyle: {
+      width: '120px',
+    },
+    style: {
+      maxWidth: '120px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
   },
   {
       dataField: "articles",
@@ -170,7 +212,7 @@ const columns = [
             <>
             <Link
                   to={`/classes/${etablissement}/${row.id}`}
-                  className="btn btn-secondary btn-sm mr-2"
+                  className="btn btn-secondary btn-sm mr-2 w-100"
                       >
                   Voir les articles du classe {'>>'}
               </Link>
@@ -180,6 +222,20 @@ const columns = [
 ];
 return (
   <div className="mb-5">
+          <div className="mt-4 mx-3">
+      <BreadCrumbs
+          data={[
+              {
+                  text: 'Dashboard',
+                  path: '/dashboard',
+              },
+              {
+                  text: etablissement,
+                  active: true,
+              },
+          ]}
+      />
+       </div>
     <Button variant="primary" onClick={handleShowAddModal}>
       Ajouter une classe
     </Button>
@@ -192,12 +248,15 @@ return (
         onChange={handleSearchChange}
       />
     </div>
+    <div style={{ width: "75%" }}>
     <BootstrapTable
       keyField="id"
       data={filteredClasses}
       columns={columns}
       pagination={paginationFactory()}
     />
+     </div>
+
     <Modal show={showAddModal} onHide={handleCloseModal}>
       <Modal.Header closeButton>
         <Modal.Title>Ajouter une classe</Modal.Title>
@@ -217,6 +276,7 @@ return (
           value={newType}
           onChange={handleNewTypeChange}
         />
+        
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>

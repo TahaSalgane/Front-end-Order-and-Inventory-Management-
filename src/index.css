@@ -32,6 +32,17 @@ code {
   margin-top:25vh;
   text-align: center;
 }
+.sidebar-container {
+  display: flex;
+  position: relative;
+}
+
+.button-container {
+  position: absolute;
+  top: 0;
+  right: 0; /* Adjust this value to control the distance from the sidebar */
+  cursor: pointer;
+}
 /* .avatar-wrapper {
   display: flex;
   align-items: center;
@@ -114,4 +125,21 @@ color: rgba(0, 0, 0, 0.3) !important;
 }
 #pageDropDown{
   background-color: rgb(153, 0, 255) !important;
+}
+.Modal {
+  position: absolute !important;
+  top: 20% !important;
+  width: 300px;
+}
+.custom-dialog {
+  margin-top: 9% !important;
+  max-width: 40% !important;
+}
+.articles-container {
+  display: flex;
+  align-items: center;
+}
+
+.articles-container label {
+  margin-right: 10px;
 }

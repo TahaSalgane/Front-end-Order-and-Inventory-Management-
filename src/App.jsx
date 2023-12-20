@@ -8,12 +8,18 @@ import { useSelector } from 'react-redux';
 import Articels from 'pages/Articles';
 import Users from 'pages/Users';
 import Orders from 'pages/Orders';
+import Reclamation from 'pages/Reclamation';
 import Classes from 'pages/Classes';
+import Parametre from 'pages/parametre';
 import ClasseArticles from 'pages/ClasseArticles';
+import { ToastContainer } from 'react-toastify';
+
 function App() {
   const {user} = useSelector(state=>state.auth);
   return (
    <>
+    <ToastContainer />
+
     <Routes>
     <Route element={<ProtectedRoutes/>} >
         <Route element={<Layout />}>
@@ -21,7 +27,9 @@ function App() {
                <Route path="/profile" element={<Profile />}> </Route>
                <Route path="/articles" element={<Articels />}> </Route>
                <Route path="/utilisateurs" element={<Users />}> </Route>
+               <Route path="/parametre" element={<Parametre />}> </Route>
                <Route path="/ordres" element={<Orders />}> </Route>
+               <Route path="/réclamation" element={<Reclamation />}> </Route>
                <Route path="/classes/:etablissement" element={<Classes />}> </Route>
                <Route path="/classes/:etablissement/:classId" element={<ClasseArticles />}> </Route>
        </Route>

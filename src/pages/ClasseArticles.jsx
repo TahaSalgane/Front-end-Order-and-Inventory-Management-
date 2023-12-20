@@ -4,7 +4,10 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { useParams,useNavigate} from "react-router-dom";
 import { getClasseArticles, updateArticle, addNewArticle, deleteArticle } from "services/classeArticlesService";
-
+import { toast } from 'react-toastify';
+import BreadCrumbs from "components/ui/breadCrumbs";
+import { faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const ClasseArticles = () => {
   // const { classeId } = useParams();
   const [articles, setArticles] = useState([]);
@@ -26,7 +29,6 @@ const ClasseArticles = () => {
     const loadData = async () => {
       try {
         const { data } = await getClasseArticles(classId,etablissement);
-        console.log(data)
         if(data.back){
           navigate(-1)
         }else{
@@ -34,7 +36,7 @@ const ClasseArticles = () => {
           setArticles(data.articles[0]?data.articles[0]:[]);
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error.message, { autoClose: 3000 });
       }
     };
     loadData();
@@ -87,8 +89,10 @@ const ClasseArticles = () => {
       );
       setArticles(updatedArticles);
       handleCloseModal();
+      toast.success("L'article de la classe a été supprimé avec succès.", { autoClose: 3000 });
+
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, { autoClose: 3000 });
     }
   };
 
@@ -106,8 +110,9 @@ const ClasseArticles = () => {
       console.log(data)
       setArticles([...articles, data.article]);
       handleCloseModal();
+      toast.success("L'article a été supprimé avec succès.", { autoClose: 3000 });
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, { autoClose: 3000 });
     }
   };
 
@@ -127,17 +132,14 @@ const ClasseArticles = () => {
       );
       setArticles(updatedArticles);
       handleCloseModal();
+      toast.success("L'article a été modifié avec succès.", { autoClose: 3000 });
+
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, { autoClose: 3000 });
     }
   };
 
   const columns = [
-    {
-      dataField: "id",
-      text: "ID",
-      sort: true,
-    },
     {
       dataField: "designation",
       text: "Designation",
@@ -147,43 +149,92 @@ const ClasseArticles = () => {
       dataField: "qte",
       text: "Quantity",
       sort: true,
+      headerStyle: {
+        width: '220px', 
+      },
+      style: {
+        maxWidth: '220px',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
     },
     {
       dataField: "actions",
       text: "Actions",
-      formatter: (cell, article) => (
+      formatter: (cell, row) => (
         <>
-          <Button
-            variant="primary"
-            size="sm"
-            className="mr-2"
-            onClick={() => handleShowUpdateModal(article)}
-          >
-            Update
-          </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() => handleShowDeleteModal(article)}
-          >
-            Delete
-          </Button>
+            <FontAwesomeIcon
+                onClick={() => handleShowUpdateModal(row)}
+                style={{
+                    borderRadius: '15px',
+                    cursor: 'pointer',
+                    padding: '5px',
+                    color: 'white',
+                    background: 'rgb(23, 180, 23)',
+                    marginLeft: '8px',
+                }}
+                size="lg"
+                className="me-1"
+                icon={faPenToSquare}
+            />
+            <FontAwesomeIcon
+                onClick={() => handleShowDeleteModal(row)}
+                style={{
+                    borderRadius: '15px',
+                    cursor: 'pointer',
+                    padding: '5px',
+                    color: 'white',
+                    background: 'red',
+                    marginLeft: '8px',
+                }}
+                size="lg"
+                className="me-1"
+                icon={faTrash}
+            />
         </>
       ),
+      headerStyle: {
+        width: '120px', 
+      },
+      style: {
+        maxWidth: '120px',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
     },
   ];
 
   return (
     <div className="mb-5">
+    <div className="mt-4 mx-3">
+      <BreadCrumbs
+          data={[
+              {
+                  text: 'Dashboard',
+                  path: '/dashboard',
+              },
+              {
+                text: etablissement,
+                path: '/classes/'+etablissement,
+            },
+              {
+                  text: classId,
+                  active: true,
+              },
+          ]}
+      />
+       </div>
       <Button variant="primary" onClick={handleShowAddModal}>
         Add Article
       </Button>
+      <div style={{ width: "50%" ,marginTop:"25px" }}>
       <BootstrapTable
         keyField="id"
         data={articles}
         columns={columns}
         pagination={paginationFactory()}
       />
+      </div>
       <Modal show={showAddModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add Article</Modal.Title>

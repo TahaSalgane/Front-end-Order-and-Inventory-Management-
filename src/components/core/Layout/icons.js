@@ -1,8 +1,8 @@
 import { AiFillDashboard } from "react-icons/ai";
-import { BiChevronsRight, BiChevronsLeft, BiTable, BiPen, BiCameraMovie, BiEdit } from "react-icons/bi";
+import { BiChevronsRight, BiChevronsLeft, BiTable, BiPen, BiCameraMovie, BiEdit} from "react-icons/bi";
 import { SiGoogleclassroom } from "react-icons/si";
-import { HiUserGroup,HiUser } from "react-icons/hi";
-import { FaSchool,FaArrowCircleRight,FaBoxOpen,FaBullhorn } from "react-icons/fa";
+import { HiUserGroup,HiUser  } from "react-icons/hi";
+import { FaSchool,FaArrowCircleRight,FaBoxOpen,FaBullhorn ,FaBell , FaCog } from "react-icons/fa";
 
 export {
   AiFillDashboard,
@@ -18,5 +18,7 @@ export {
   FaSchool,
   FaArrowCircleRight,
   FaBoxOpen,
-  FaBullhorn
+  FaBullhorn ,
+  FaBell ,
+  FaCog
 };

@@ -6,12 +6,9 @@ export const loginUser  = (user)=>{
         try {
             const {data} = await userLogin(user);
             console.log(data)
-            // const userDecoded = getUser(data.token);
-            // console.log(userDecoded)
             dispatch(authActions.login(data));
             localStorage.setItem("userInfo",JSON.stringify(data));
         } catch (error) {
-            console.log(error.message)
             //Set the error inside the localStorage (errMessage)
             localStorage.setItem('errMessage', error.response.data.error);
             // Set a timeout to remove the value after a specific amount of time

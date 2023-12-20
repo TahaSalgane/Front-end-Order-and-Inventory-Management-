@@ -6,6 +6,11 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import { createUser,deleteUser,updateUser,getAllUsers } from 'services/usersService';
 import { useSelector } from "react-redux";
 import  {userValidationSchema}  from 'utils/JoiValidation';
+import { faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from 'react-toastify';
+import BreadCrumbs from "components/ui/breadCrumbs";
+
 const User = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -23,7 +28,7 @@ useEffect(()=>{
             const {data} =await getAllUsers(); 
             setUsers(data)
         } catch (error) {
-            console.log(error)
+          toast.error(error.message, { autoClose: 3000 });
         } 
     };
     loadData();
@@ -51,9 +56,10 @@ useEffect(()=>{
       await deleteUser(selectedUser.id);
       const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
       setUsers(updatedUsers);
+      toast.success("L'utilisateur a été supprimé avec succès.", { autoClose: 3000 });
       setIsOpen(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, { autoClose: 3000 });
     }
   };
   const handleUpdateClick = (user) => {
@@ -78,9 +84,9 @@ useEffect(()=>{
     
       setUsers(updatedUsers);
       handleCloseModal();
-      console.log(data);
-      } catch (error) {
-      console.log(error);
+      toast.success("L'utilisateur a été modifié avec succès.", { autoClose: 3000 });
+    } catch (error) {
+        toast.error(error.message, { autoClose: 3000 });
 }
 };
   const ConfirmDeleteModal = () => {
@@ -127,8 +133,9 @@ useEffect(()=>{
       setUsers([...users, newArticle]);
       handleCloseModal();
       handleCloseModal();
+      toast.success("L'utilisateur a été ajouté avec succès.", { autoClose: 3000 });
     } catch (error) {
-      console.log(error)
+      toast.error(error.message, { autoClose: 3000 });
     }
   };
   const filteredUsers = users.filter((user) =>
@@ -137,13 +144,20 @@ useEffect(()=>{
   const columns = [
     {
       dataField: "id",
-      text: "ID",
-      sort: true,
+      text: "ID Utilisateur",
+      headerStyle: {
+        width: '10%',
+      },
+      style: {
+        maxWidth: '10%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
     },
     {
       
       dataField: "name",
-      text: "name",
+      text: "Nom d'utilisateur",
       sort: true,
     },
     {
@@ -153,30 +167,69 @@ useEffect(()=>{
     },
     {
       dataField: "role",
-      text: "role",
+      text: "rôle",
       sort: true,
     },
     {
       dataField: "actions",
       text: "Actions",
+      headerStyle: {
+        width: '10%',
+      },
+      style: {
+        maxWidth: '10%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
       formatter: (cell, row) => (
         <>
-          <Button
-            variant="primary"
-            size="sm"
-            className="mr-2"
-            onClick={() => handleUpdateClick(row)}
-          >
-            Modifier
-          </Button>
-          <Button variant="danger" size="sm" onClick={() => handleDeleteClick(row)}>
-            Supprimer
-            </Button>
-            </>
+            <FontAwesomeIcon
+                onClick={() => handleUpdateClick(row)}
+                style={{
+                    borderRadius: '15px',
+                    cursor: 'pointer',
+                    padding: '5px',
+                    color: 'white',
+                    background: 'rgb(23, 180, 23)',
+                    marginLeft: '20px',
+                }}
+                size="lg"
+                className="me-1"
+                icon={faPenToSquare}
+            />
+            <FontAwesomeIcon
+                onClick={() => handleDeleteClick(row)}
+                style={{
+                    borderRadius: '15px',
+                    cursor: 'pointer',
+                    padding: '5px',
+                    color: 'white',
+                    background: 'red',
+                    marginLeft: '20px',
+                }}
+                size="lg"
+                className="me-1"
+                icon={faTrash}
+            />
+        </>
             ),}
         ]
   return (
     <div className="mb-5">
+      <div className="mt-4 mx-3">
+        <BreadCrumbs
+            data={[
+                {
+                    text: 'Dashboard',
+                    path: '/dashboard',
+                },
+                {
+                    text: 'Utilisateurs',
+                    active: true,
+                },
+            ]}
+        />
+        </div>
         <Button variant="primary" onClick={handleShowAddModal}>
   Ajouter un utilisateur
     </Button>
@@ -189,12 +242,15 @@ useEffect(()=>{
           onChange={handleSearchChange}
         />
       </div>
+      <div style={{ width: "75%" }}>
       <BootstrapTable
         keyField="id"
         data={filteredUsers}
         columns={columns}
         pagination={paginationFactory()}
       />
+      </div>
+
       <Modal show={showAddModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Ajouter un utilisateur</Modal.Title>
